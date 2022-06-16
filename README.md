@@ -1,3 +1,5 @@
-## Simple JS Calculator
+## Simple JS Calculator PWA
 
-![Screenshot](screen.png)
+Progressive Web App Calculator. [Demo Page →](https://vkarasik.github.io/js-calculator/)
+
+![Demo](demo.png)
