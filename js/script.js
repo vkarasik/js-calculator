@@ -1,3 +1,14 @@
+window.addEventListener('load', async () => {
+  if (navigator.serviceWorker) {
+    try {
+      const reg = await navigator.serviceWorker.register('sw.js');
+      console.log('SW Succeed', reg);
+    } catch (e) {
+      console.log('SW Failed', e);
+    }
+  }
+});
+
 const nums = document.querySelectorAll('.calculator__key');
 const calculator = document.querySelector('.calculator');
 const display = document.querySelector('.calculator__display');
@@ -24,11 +35,22 @@ const getKeyType = (key) => {
   const { action } = key.dataset;
 
   if (!action) return 'number';
-  if (action === 'add' || action === 'subtract' || action === 'multiplay' || action === 'divide') return 'operator';
+  if (
+    action === 'add' ||
+    action === 'subtract' ||
+    action === 'multiplay' ||
+    action === 'divide'
+  )
+    return 'operator';
   return action;
 };
 
-const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) => {
+const updateCalculatorState = (
+  key,
+  calculator,
+  calculatedValue,
+  displayedNum
+) => {
   const keyType = getKeyType(key);
   const firstValue = calculator.dataset.firstValue;
   const modValue = calculator.dataset.modValue;
@@ -36,10 +58,17 @@ const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) =
   const previousKeyType = calculator.dataset.previousKeyType;
   calculator.dataset.previousKeyType = keyType;
 
-  Array.from(key.parentNode.children).forEach((key) => key.classList.remove('calculator__key_pressed'));
+  Array.from(key.parentNode.children).forEach((key) =>
+    key.classList.remove('calculator__key_pressed')
+  );
 
   if (keyType === 'operator') {
-    if (operator && displayedNum && previousKeyType !== 'operator' && previousKeyType !== 'calculate') {
+    if (
+      operator &&
+      displayedNum &&
+      previousKeyType !== 'operator' &&
+      previousKeyType !== 'calculate'
+    ) {
       calculator.dataset.firstValue = calculatedValue;
     } else {
       calculator.dataset.firstValue = displayedNum;
@@ -66,7 +95,8 @@ const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) =
   }
 
   if (keyType === 'calculate') {
-    calculator.dataset.modValue = firstValue && previousKeyType === 'calculate' ? modValue : displayedNum;
+    calculator.dataset.modValue =
+      firstValue && previousKeyType === 'calculate' ? modValue : displayedNum;
   }
 };
 
@@ -81,7 +111,11 @@ const createResultString = (key, displayedNum, state) => {
   const keyType = getKeyType(key);
 
   if (keyType === 'number') {
-    return displayedNum === '0' || previousKeyType === 'operator' || previousKeyType === 'calculate' ? keyContent : displayedNum + keyContent;
+    return displayedNum === '0' ||
+      previousKeyType === 'operator' ||
+      previousKeyType === 'calculate'
+      ? keyContent
+      : displayedNum + keyContent;
   }
 
   if (keyType === 'decimal') {
@@ -98,7 +132,12 @@ const createResultString = (key, displayedNum, state) => {
     const firstValue = calculator.dataset.firstValue;
     const operator = calculator.dataset.operator;
 
-    if (operator && firstValue && previousKeyType !== 'operator' && previousKeyType !== 'calculate') {
+    if (
+      operator &&
+      firstValue &&
+      previousKeyType !== 'operator' &&
+      previousKeyType !== 'calculate'
+    ) {
       return calculate(firstValue, operator, displayedNum);
     } else {
       return displayedNum;
@@ -113,7 +152,9 @@ const createResultString = (key, displayedNum, state) => {
     let modValue = calculator.dataset.modValue;
 
     if (firstValue) {
-      return previousKeyType === 'calculate' ? calculate(displayedNum, operator, modValue) : calculate(firstValue, operator, displayedNum);
+      return previousKeyType === 'calculate'
+        ? calculate(displayedNum, operator, modValue)
+        : calculate(firstValue, operator, displayedNum);
     } else {
       return displayedNum;
     }
@@ -124,7 +165,11 @@ for (i = 0; i < nums.length; i++) {
   nums[i].addEventListener('click', function (e) {
     const key = e.target;
     const displayedNum = display.textContent;
-    const resultString = createResultString(e.target, displayedNum, calculator.dataset);
+    const resultString = createResultString(
+      e.target,
+      displayedNum,
+      calculator.dataset
+    );
 
     display.textContent = resultString;
     updateCalculatorState(key, calculator, resultString, displayedNum);
