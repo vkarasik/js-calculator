@@ -1,5 +1,10 @@
-const staticCacheName = 's-app-v1';
-const assetUrls = ['index.html', '/js/script.js', '/css/style.css'];
+const staticCacheName = 's-app-v2';
+const assetUrls = [
+  'https://vkarasik.github.io/js-calculator/',
+  'https://vkarasik.github.io/js-calculator/js/script.js',
+  'https://vkarasik.github.io/js-calculator/css/style.css',
+  'https://vkarasik.github.io/js-calculator/icons/favicon.ico'
+];
 
 // Listen Install
 self.addEventListener('install', async (event) => {
@@ -19,13 +24,13 @@ self.addEventListener('activate', async (event) => {
 
 // Listen Fetch
 self.addEventListener('fetch', (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
+  console.log(event);
   event.respondWith(cacheFirst(event.request));
 });
 
 // Cache Files
 async function cacheFirst(request) {
   const cached = await caches.match(request);
-  return cached ?? (await fetch(request));
+  console.log(cached);
+  return cached;
 }
