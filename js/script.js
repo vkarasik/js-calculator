@@ -38,7 +38,7 @@ const getKeyType = (key) => {
   if (
     action === 'add' ||
     action === 'subtract' ||
-    action === 'multiplay' ||
+    action === 'multiply' ||
     action === 'divide'
   )
     return 'operator';
